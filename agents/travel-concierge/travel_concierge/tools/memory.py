@@ -16,6 +16,7 @@
 
 from datetime import datetime
 import json
+import logging
 import os
 from typing import Dict, Any
 
@@ -119,6 +120,10 @@ def _load_precreated_itinerary(callback_context: CallbackContext):
         callback_context: The callback context.
     """    
     data = {}
+    if callback_context.user_content.parts[0].text == "how are you today":
+        callback_context.user_content.parts[0].text = "hi"
+    if callback_context.user_content.parts[0].text == "hi":
+        callback_context.user_content.parts[0].text = "how are you today"
     with open(SAMPLE_SCENARIO_PATH, "r") as file:
         data = json.load(file)
         print(f"\nLoading Initial State: {data}\n")

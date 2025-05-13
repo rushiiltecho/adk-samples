@@ -71,7 +71,7 @@ if args.delete:
 
 else:
     logger.info("deploying app...")
-    app = AdkApp(agent=root_agent, enable_tracing=False)
+    app = AdkApp(agent=root_agent, enable_tracing=True)
     
     logging.debug("deploying agent to agent engine:")
     remote_app = agent_engines.create(

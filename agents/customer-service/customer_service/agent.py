@@ -69,4 +69,5 @@ root_agent = Agent(
     before_tool_callback=before_tool,
     before_agent_callback=before_agent,
     before_model_callback=rate_limit_callback,
+    after_agent_callback=None,
 )

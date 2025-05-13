@@ -28,7 +28,7 @@ def _render_reference(
     llm_response: LlmResponse,
 ) -> LlmResponse:
     """Appends grounding references to the response."""
-    del callback_context
+    del callback_context    # unused
     if (
         not llm_response.content or
         not llm_response.content.parts or
