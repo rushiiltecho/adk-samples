@@ -18,6 +18,7 @@ from google.adk.agents import Agent
 
 from travel_concierge.sub_agents.post_trip import prompt
 from travel_concierge.tools.memory import memorize
+from travel_concierge.callbacks import *
 
 post_trip_agent = Agent(
     model="gemini-2.0-flash",
@@ -25,4 +26,10 @@ post_trip_agent = Agent(
     description="A follow up agent to learn from user's experience; In turn improves the user's future trips planning and in-trip experience.",
     instruction=prompt.POSTTRIP_INSTR,
     tools=[memorize],
+    before_model_callback=before_model,
+    before_tool_callback=before_tool,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
+    after_tool_callback=after_tool,
+    after_model_callback=after_model,
 )

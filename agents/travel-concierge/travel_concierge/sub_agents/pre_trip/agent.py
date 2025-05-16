@@ -19,7 +19,7 @@ from google.adk.tools.agent_tool import AgentTool
 from travel_concierge.shared_libraries import types
 from travel_concierge.sub_agents.pre_trip import prompt
 from travel_concierge.tools.search import google_search_grounding
-
+from travel_concierge.callbacks import *
 
 what_to_pack_agent = Agent(
     model="gemini-2.0-flash",
@@ -30,6 +30,8 @@ what_to_pack_agent = Agent(
     disallow_transfer_to_peers=True,
     output_key="what_to_pack",
     output_schema=types.PackingList,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 pre_trip_agent = Agent(
@@ -38,4 +40,6 @@ pre_trip_agent = Agent(
     description="Given an itinerary, this agent keeps up to date and provides relevant travel information to the user before the trip.",
     instruction=prompt.PRETRIP_AGENT_INSTR,
     tools=[google_search_grounding, AgentTool(agent=what_to_pack_agent)],
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )

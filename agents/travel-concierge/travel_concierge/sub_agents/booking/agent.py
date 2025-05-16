@@ -19,13 +19,15 @@ from google.adk.tools.agent_tool import AgentTool
 from google.genai.types import GenerateContentConfig
 
 from travel_concierge.sub_agents.booking import prompt
-
+from travel_concierge.callbacks import *
 
 create_reservation = Agent(
     model="gemini-2.0-flash-001",
     name="create_reservation",
     description="""Create a reservation for the selected item.""",
     instruction=prompt.CONFIRM_RESERVATION_INSTR,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 
@@ -34,6 +36,8 @@ payment_choice = Agent(
     name="payment_choice",
     description="""Show the users available payment choices.""",
     instruction=prompt.PAYMENT_CHOICE_INSTR,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 process_payment = Agent(
@@ -41,6 +45,8 @@ process_payment = Agent(
     name="process_payment",
     description="""Given a selected payment choice, processes the payment, completing the transaction.""",
     instruction=prompt.PROCESS_PAYMENT_INSTR,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 
@@ -54,7 +60,11 @@ booking_agent = Agent(
         AgentTool(agent=payment_choice),
         AgentTool(agent=process_payment),
     ],
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
     generate_content_config=GenerateContentConfig(
         temperature=0.0, top_p=0.5
-    )
+    ),
+    before_tool_callback=before_tool,
+    after_tool_callback=after_tool,
 )

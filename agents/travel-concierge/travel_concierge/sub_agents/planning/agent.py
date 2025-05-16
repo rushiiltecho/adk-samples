@@ -20,7 +20,7 @@ from google.genai.types import GenerateContentConfig
 from travel_concierge.shared_libraries import types
 from travel_concierge.sub_agents.planning import prompt
 from travel_concierge.tools.memory import memorize
-
+from travel_concierge.callbacks import *
 
 itinerary_agent = Agent(
     model="gemini-2.0-flash-001",
@@ -32,6 +32,8 @@ itinerary_agent = Agent(
     output_schema=types.Itinerary,
     output_key="itinerary",
     generate_content_config=types.json_response_config,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 
@@ -45,6 +47,8 @@ hotel_room_selection_agent = Agent(
     output_schema=types.RoomsSelection,
     output_key="room",
     generate_content_config=types.json_response_config,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 hotel_search_agent = Agent(
@@ -57,6 +61,8 @@ hotel_search_agent = Agent(
     output_schema=types.HotelsSelection,
     output_key="hotel",
     generate_content_config=types.json_response_config,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 
@@ -70,6 +76,8 @@ flight_seat_selection_agent = Agent(
     output_schema=types.SeatsSelection,
     output_key="seat",
     generate_content_config=types.json_response_config,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 flight_search_agent = Agent(
@@ -82,6 +90,8 @@ flight_search_agent = Agent(
     output_schema=types.FlightsSelection,
     output_key="flight",
     generate_content_config=types.json_response_config,
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )
 
 
@@ -100,5 +110,7 @@ planning_agent = Agent(
     ],
     generate_content_config=GenerateContentConfig(
         temperature=0.1, top_p=0.5
-    )
+    ),
+    before_agent_callback=before_agent,
+    after_agent_callback=after_agent,
 )

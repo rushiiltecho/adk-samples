@@ -25,9 +25,8 @@ from travel_concierge.sub_agents.planning.agent import planning_agent
 from travel_concierge.sub_agents.post_trip.agent import post_trip_agent
 from travel_concierge.sub_agents.pre_trip.agent import pre_trip_agent
 
-from travel_concierge.tools.memory import _load_precreated_itinerary
-
-
+from travel_concierge.tools.memory import _load_precreated_itinerary, _after_agent, _after_model, _before_model
+from travel_concierge.callbacks import before_agent, after_agent, before_tool, after_tool, after_model, before_model
 root_agent = Agent(
     model="gemini-2.0-flash-001",
     name="root_agent",
@@ -42,4 +41,7 @@ root_agent = Agent(
         post_trip_agent,
     ],
     before_agent_callback=_load_precreated_itinerary,
+    after_agent_callback=after_agent,
+    before_model_callback=before_model,
+    after_model_callback=after_model,
 )

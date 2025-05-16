@@ -21,10 +21,12 @@ import os
 from typing import Dict, Any
 
 from google.adk.agents.callback_context import CallbackContext
+from google.adk.agents.llm_agent import LlmResponse, LlmRequest
 from google.adk.sessions.state import State
 from google.adk.tools import ToolContext
 
 from travel_concierge.shared_libraries import constants
+from travel_concierge.utils import log_data
 
 SAMPLE_SCENARIO_PATH = os.getenv(
     "TRAVEL_CONCIERGE_SCENARIO", "eval/itinerary_empty_default.json"
@@ -109,6 +111,7 @@ def _set_initial_states(source: Dict[str, Any], target: State | dict[str, Any]):
             target[constants.ITIN_END_DATE] = itinerary[constants.END_DATE]
             target[constants.ITIN_DATETIME] = itinerary[constants.START_DATE]
 
+from travel_concierge.callbacks import before_agent
 
 def _load_precreated_itinerary(callback_context: CallbackContext):
     """
@@ -127,5 +130,24 @@ def _load_precreated_itinerary(callback_context: CallbackContext):
     with open(SAMPLE_SCENARIO_PATH, "r") as file:
         data = json.load(file)
         print(f"\nLoading Initial State: {data}\n")
-
     _set_initial_states(data["state"], callback_context.state)
+    
+    before_agent(callback_context)
+    # log_data(callback_context,"before_agent")
+
+
+def _after_agent(callback_context:CallbackContext):
+    log_data(callback_context,"after_agent")
+
+
+def _before_tool(tool, args, tool_context:ToolContext):
+    from ..utils import logger
+    logger.info(f"Tool Context: {tool_context.__dict__}")
+
+
+def _before_model(callback_context:CallbackContext, llm_request:LlmRequest):
+    log_data(callback_context, "before_model")
+
+
+def _after_model(callback_context:CallbackContext, llm_response:LlmResponse):
+    log_data(callback_context,"after_model")
